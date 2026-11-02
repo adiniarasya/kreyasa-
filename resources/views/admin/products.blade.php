@@ -2,217 +2,230 @@
 
 @section('title', 'Kelola Produk - KREYASA')
 
-@push('styles')
-<style>
-.admin-view{ position:fixed; inset:0; background:var(--black); z-index:900; display:flex; }
-.admin-sidebar{ width:250px; background:var(--navy); border-right:1px solid var(--glass-border); padding:28px 20px; display:flex; flex-direction:column; }
-.admin-sidebar .logo{ margin-bottom:36px; padding-left:8px; }
-.admin-nav{ display:flex; flex-direction:column; gap:6px; flex:1; }
-.admin-nav a{ display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:10px; color:var(--text-muted); font-size:.9rem; font-weight:500; }
-.admin-nav a i{ width:18px; text-align:center; }
-.admin-nav a:hover{ background:rgba(255,255,255,.05); color:var(--text-main); }
-.admin-nav a.active{ background:linear-gradient(90deg,rgba(108,60,225,.25),rgba(139,92,246,.15)); color:#fff; border:1px solid rgba(139,92,246,.3); }
-.admin-main{ flex:1; overflow-y:auto; }
-.admin-topbar{ padding:22px 36px; border-bottom:1px solid var(--glass-border); display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; background:rgba(10,10,26,.9); backdrop-filter:blur(10px); z-index:5; }
-.admin-topbar h2{ font-size:1.3rem; font-weight:800; }
-.admin-content{ padding:32px 36px; }
-
-/* Card produk */
-.product-admin-card{
-  display:grid;
-  grid-template-columns:120px 1fr auto;
-  gap:20px;
-  align-items:start;
-  padding:20px;
-  border-radius:16px;
-  margin-bottom:16px;
-}
-.product-admin-card img{
-  width:120px; height:120px; object-fit:cover; border-radius:12px;
-  background:rgba(255,255,255,.05);
-}
-.form-row{ display:grid; grid-template-columns:2fr 1fr 1fr; gap:12px; margin-bottom:12px; }
-.form-row-2{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
-.mini-label{ font-size:.72rem; color:var(--text-muted); margin-bottom:4px; display:block; }
-.mini-input{ width:100%; padding:8px 10px; border-radius:8px; background:rgba(255,255,255,.05); border:1px solid var(--glass-border); color:var(--text-main); font-size:.85rem; font-family:inherit; }
-.mini-input:focus{ outline:none; border-color:var(--purple-light); }
-.file-input{ font-size:.78rem; color:var(--text-muted); }
-.file-input::file-selector-button{
-  background:rgba(139,92,246,.15); color:var(--purple-light); border:1px solid rgba(139,92,246,.3);
-  padding:6px 12px; border-radius:6px; cursor:pointer; font-size:.78rem; font-weight:600; margin-right:10px;
-}
-.btn-danger{ background:rgba(239,68,68,.15); color:#FCA5A5; border:1px solid rgba(239,68,68,.4); cursor:pointer; padding:8px 14px; border-radius:8px; font-size:.78rem; }
-.btn-danger:hover{ background:rgba(239,68,68,.25); }
-.btn-icon{ padding:8px 14px; font-size:.78rem; }
-
-/* Form tambah */
-.add-form-box{
-  padding:24px;
-  border-radius:16px;
-  margin-bottom:24px;
-  background:rgba(139,92,246,.06);
-  border:1px dashed rgba(139,92,246,.3);
-}
-.add-form-box h3{ font-size:1rem; margin-bottom:16px; display:flex; align-items:center; gap:8px; }
-</style>
-@endpush
-
 @section('content')
-<div class="admin-view">
-  <aside class="admin-sidebar">
-    <div class="logo">KREYASA</div>
-    <nav class="admin-nav">
-      <a href="{{ route('admin.dashboard') }}"><i class="fa-solid fa-chart-line"></i><span>Dashboard</span></a>
-      <a href="{{ route('admin.orders') }}"><i class="fa-solid fa-receipt"></i><span>Kelola Pesanan</span></a>
-      <a href="{{ route('admin.products') }}" class="active"><i class="fa-solid fa-box"></i><span>Kelola Produk</span></a>
-      <a href="#"><i class="fa-solid fa-book"></i><span>Buku Panduan</span></a>
-    </nav>
-    <form method="POST" action="{{ route('admin.logout') }}">
-      @csrf
-      <button type="submit" class="btn btn-outline btn-sm btn-block"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
-    </form>
-  </aside>
+  <div class="fixed inset-0 bg-slate-50 dark:bg-slate-950 z-40 flex overflow-hidden">
 
-  <main class="admin-main">
-    <div class="admin-topbar">
-      <h2>Kelola Produk</h2>
-      <div style="color:var(--text-muted);font-size:.9rem;">
-        Total: <b style="color:var(--text-main);">{{ $products->count() }}</b> produk
+    <aside
+      class="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 p-6 flex flex-col shrink-0 transition-all duration-300">
+      <div class="text-2xl font-bold text-indigo-600 dark:text-indigo-400 tracking-tight mb-8 pl-2">
+        KREYASA
       </div>
-    </div>
 
-    <div class="admin-content">
+      <nav class="flex flex-col gap-1.5 flex-1">
+        <a href="{{ route('admin.dashboard') }}"
+          class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium text-sm transition-colors">
+          <i class="fa-solid fa-chart-line w-5 text-center"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="{{ route('admin.orders') }}"
+          class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium text-sm transition-colors">
+          <i class="fa-solid fa-receipt w-5 text-center"></i>
+          <span>Kelola Pesanan</span>
+        </a>
+        <a href="{{ route('admin.products') }}"
+          class="flex items-center gap-3 px-4 py-3 rounded-lg bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400 font-semibold text-sm">
+          <i class="fa-solid fa-box w-5 text-center"></i>
+          <span>Kelola Produk</span>
+        </a>
+        <a href="#"
+          class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium text-sm transition-colors">
+          <i class="fa-solid fa-book w-5 text-center"></i>
+          <span>Buku Panduan</span>
+        </a>
+      </nav>
 
-      {{-- Flash message --}}
-      @if(session('success'))
-        <div class="flash-message" style="position:static;margin-bottom:20px;transform:none;">
-          <i class="fa-solid fa-circle-check"></i> {{ session('success') }}
+      <form method="POST" action="{{ route('admin.logout') }}" class="mt-6">
+        @csrf
+        <button type="submit"
+          class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 text-sm font-medium transition-colors">
+          <i class="fa-solid fa-right-from-bracket"></i> Logout
+        </button>
+      </form>
+    </aside>
+
+    <main class="flex-1 overflow-y-auto">
+
+      <header
+        class="sticky top-0 z-10 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-8 py-5 flex items-center justify-between">
+        <h1 class="text-xl font-bold text-slate-900 dark:text-white">Kelola Produk</h1>
+        <div class="text-sm text-slate-500 dark:text-slate-400">
+          Total: <strong class="text-slate-900 dark:text-white">{{ $products->count() }}</strong> produk
         </div>
-      @endif
+      </header>
 
-      {{-- ==================== FORM TAMBAH PRODUK ==================== --}}
-      <div class="add-form-box">
-        <h3><i class="fa-solid fa-plus-circle" style="color:var(--purple-light);"></i> Tambah Produk Baru</h3>
+      <div class="p-8 max-w-7xl mx-auto">
 
-        <form method="POST" action="{{ route('admin.products.store') }}" enctype="multipart/form-data">
-          @csrf
-
-          <div class="form-row-2">
-            <div>
-              <label class="mini-label">Nama Produk *</label>
-              <input type="text" name="name" class="mini-input" placeholder="Contoh: Paket Modul Ajar" required>
-            </div>
-            <div>
-              <label class="mini-label">Kategori *</label>
-              <input type="text" name="category" class="mini-input" placeholder="Contoh: Design Pendidikan" required>
-            </div>
+        @if(session('success'))
+          <div
+            class="mb-6 p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900/50 text-emerald-600 dark:text-emerald-400 text-sm flex items-start gap-3">
+            <i class="fa-solid fa-circle-check mt-0.5"></i>
+            <span>{{ session('success') }}</span>
           </div>
+        @endif
 
-          <div style="margin-bottom:12px;">
-            <label class="mini-label">Deskripsi</label>
-            <textarea name="description" class="mini-input" rows="2" placeholder="Deskripsi singkat produk..."></textarea>
-          </div>
+        <div
+          class="mb-10 p-6 md:p-8 bg-indigo-50/50 dark:bg-indigo-950/10 border border-indigo-100 dark:border-indigo-900/30 rounded-2xl">
+          <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+            <i class="fa-solid fa-plus-circle text-indigo-500"></i> Tambah Produk Baru
+          </h3>
 
-          <div class="form-row">
-            <div>
-              <label class="mini-label">Harga (Rp) *</label>
-              <input type="number" name="price" class="mini-input" placeholder="500000" min="0" required>
-            </div>
-            <div>
-              <label class="mini-label">DP (%) *</label>
-              <input type="number" name="dp_percent" class="mini-input" value="50" min="10" max="100" required>
-            </div>
-            <div>
-              <label class="mini-label">Badge</label>
-              <input type="text" name="badge" class="mini-input" placeholder="Ready / Custom" value="Ready">
-            </div>
-          </div>
-
-          <div style="margin-bottom:16px;">
-            <label class="mini-label">Foto Produk</label>
-            <input type="file" name="image" class="mini-input file-input" accept="image/*">
-            <div style="font-size:.72rem;color:var(--text-muted);margin-top:4px;">
-              Format: JPG, PNG, WEBP. Maks 5MB. Kalau kosong, akan pakai placeholder otomatis.
-            </div>
-          </div>
-
-          <button type="submit" class="btn btn-primary btn-sm">
-            <i class="fa-solid fa-plus"></i> Tambah Produk
-          </button>
-        </form>
-      </div>
-
-      {{-- ==================== DAFTAR PRODUK ==================== --}}
-      <h3 style="font-size:1rem;margin-bottom:16px;">Daftar Produk ({{ $products->count() }})</h3>
-
-      @forelse($products as $p)
-        <div class="product-admin-card glass">
-          <img src="{{ $p->image }}" alt="{{ $p->name }}">
-
-          <form method="POST" action="{{ route('admin.products.update', $p->id) }}" enctype="multipart/form-data" id="form-{{ $p->id }}">
+          <form method="POST" action="{{ route('admin.products.store') }}" enctype="multipart/form-data"
+            class="space-y-5">
             @csrf
-
-            <div class="form-row-2">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
-                <label class="mini-label">Nama</label>
-                <input type="text" name="name" class="mini-input" value="{{ $p->name }}" required>
+                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Nama Produk *</label>
+                <input type="text" name="name" placeholder="Contoh: Paket Modul Ajar" required
+                  class="w-full px-4 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all">
               </div>
               <div>
-                <label class="mini-label">Kategori</label>
-                <input type="text" name="category" class="mini-input" value="{{ $p->category }}" required>
+                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Kategori *</label>
+                <input type="text" name="category" placeholder="Contoh: Design Pendidikan" required
+                  class="w-full px-4 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all">
               </div>
             </div>
 
-            <div style="margin-bottom:12px;">
-              <label class="mini-label">Deskripsi</label>
-              <textarea name="description" class="mini-input" rows="2">{{ $p->description }}</textarea>
+            <div>
+              <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Deskripsi</label>
+              <textarea name="description" rows="2" placeholder="Deskripsi singkat produk..."
+                class="w-full px-4 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"></textarea>
             </div>
 
-            <div class="form-row">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
               <div>
-                <label class="mini-label">Harga (Rp)</label>
-                <input type="number" name="price" class="mini-input" value="{{ $p->price }}" min="0" required>
+                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Harga (Rp) *</label>
+                <input type="number" name="price" placeholder="500000" min="0" required
+                  class="w-full px-4 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all">
               </div>
               <div>
-                <label class="mini-label">DP (%)</label>
-                <input type="number" name="dp_percent" class="mini-input" value="{{ $p->dp_percent }}" min="10" max="100" required>
+                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">DP (%) *</label>
+                <input type="number" name="dp_percent" value="50" min="10" max="100" required
+                  class="w-full px-4 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all">
               </div>
               <div>
-                <label class="mini-label">Badge</label>
-                <input type="text" name="badge" class="mini-input" value="{{ $p->badge }}">
+                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Badge</label>
+                <input type="text" name="badge" placeholder="Ready / Custom" value="Ready"
+                  class="w-full px-4 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all">
               </div>
             </div>
 
-            <div style="margin-bottom:12px;">
-              <label class="mini-label">Ganti Foto (opsional)</label>
-              <input type="file" name="image" class="mini-input file-input" accept="image/*">
-              <div style="font-size:.72rem;color:var(--text-muted);margin-top:4px;">
-                Biarkan kosong jika tidak mau ganti foto.
-              </div>
+            <div>
+              <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Foto Produk</label>
+              <input type="file" name="image" accept="image/*"
+                class="w-full text-sm text-slate-500 dark:text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 dark:file:bg-indigo-950/50 dark:file:text-indigo-400 transition-all border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-900 cursor-pointer">
+              <div class="text-xs text-slate-500 mt-2">Format: JPG, PNG, WEBP. Maks 5MB.</div>
             </div>
-          </form>
 
-          <div style="display:flex;flex-direction:column;gap:8px;">
-            <button type="submit" form="form-{{ $p->id }}" class="btn btn-primary btn-icon">
-              <i class="fa-solid fa-save"></i> Simpan
+            <button type="submit"
+              class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold transition-colors shadow-lg shadow-indigo-500/30">
+              <i class="fa-solid fa-plus"></i> Tambah Produk
             </button>
-
-            <form method="POST" action="{{ route('admin.products.destroy', $p->id) }}" onsubmit="return confirm('Hapus produk {{ $p->name }}?')">
-              @csrf
-              <button type="submit" class="btn-danger" style="width:100%;">
-                <i class="fa-solid fa-trash"></i> Hapus
-              </button>
-            </form>
-          </div>
+          </form>
         </div>
-      @empty
-        <div class="glass" style="text-align:center;padding:60px 20px;border-radius:16px;color:var(--text-muted);">
-          <i class="fa-solid fa-box-open" style="font-size:2.4rem;margin-bottom:14px;opacity:.4;"></i>
-          <p>Belum ada produk. Tambahkan produk pertama di atas!</p>
-        </div>
-      @endforelse
 
-    </div>
-  </main>
-</div>
+        <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6">Daftar Produk ({{ $products->count() }})</h3>
+
+        <div class="space-y-6">
+          @forelse($products as $p)
+            <div
+              class="flex flex-col lg:flex-row gap-6 p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+
+              <div class="w-full lg:w-32 h-32 shrink-0 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800">
+                @if(str_starts_with($p->image, 'http'))
+                  <img src="{{ $p->image }}" alt="{{ $p->name }}" class="w-full h-full object-cover">
+                @else
+                  <img src="{{ asset('storage/' . $p->image) }}" alt="{{ $p->name }}" class="w-full h-full object-cover">
+                @endif
+              </div>
+
+              <form method="POST" action="{{ route('admin.products.update', $p->id) }}" enctype="multipart/form-data"
+                id="form-{{ $p->id }}" class="flex-1 space-y-4">
+                @csrf
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label
+                      class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-wider">Nama</label>
+                    <input type="text" name="name" value="{{ $p->name }}" required
+                      class="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all">
+                  </div>
+                  <div>
+                    <label
+                      class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-wider">Kategori</label>
+                    <input type="text" name="category" value="{{ $p->category }}" required
+                      class="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all">
+                  </div>
+                </div>
+
+                <div>
+                  <label
+                    class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-wider">Deskripsi</label>
+                  <textarea name="description" rows="2"
+                    class="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all">{{ $p->description }}</textarea>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label
+                      class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-wider">Harga
+                      (Rp)</label>
+                    <input type="number" name="price" value="{{ $p->price }}" min="0" required
+                      class="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all">
+                  </div>
+                  <div>
+                    <label
+                      class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-wider">DP
+                      (%)</label>
+                    <input type="number" name="dp_percent" value="{{ $p->dp_percent }}" min="10" max="100" required
+                      class="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all">
+                  </div>
+                  <div>
+                    <label
+                      class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-wider">Badge</label>
+                    <input type="text" name="badge" value="{{ $p->badge }}"
+                      class="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all">
+                  </div>
+                </div>
+
+                <div>
+                  <label
+                    class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-wider">Ganti
+                    Foto (opsional)</label>
+                  <input type="file" name="image" accept="image/*"
+                    class="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200 dark:file:bg-slate-800 dark:file:text-slate-300 transition-all border border-slate-200 dark:border-slate-700 rounded-lg bg-slate-50 dark:bg-slate-950 cursor-pointer">
+                </div>
+              </form>
+
+              <div class="flex flex-row lg:flex-col gap-3 shrink-0 lg:w-32 lg:self-start">
+                <button type="submit" form="form-{{ $p->id }}"
+                  class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold transition-colors">
+                  <i class="fa-solid fa-save"></i> Simpan
+                </button>
+                <form method="POST" action="{{ route('admin.products.destroy', $p->id) }}"
+                  onsubmit="return confirm('Hapus produk {{ $p->name }}?')" class="flex-1 flex">
+                  @csrf
+                  <button type="submit"
+                    class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-900/50 hover:bg-red-100 dark:hover:bg-red-900/50 text-sm font-semibold transition-colors">
+                    <i class="fa-solid fa-trash"></i> Hapus
+                  </button>
+                </form>
+              </div>
+
+            </div>
+          @empty
+            <div
+              class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-16 text-center shadow-sm">
+              <div
+                class="w-16 h-16 mx-auto rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-4">
+                <i class="fa-solid fa-box-open text-2xl text-slate-400"></i>
+              </div>
+              <p class="text-slate-500 dark:text-slate-400 font-medium">Belum ada produk. Tambahkan produk pertama di atas!
+              </p>
+            </div>
+          @endforelse
+        </div>
+
+      </div>
+    </main>
+  </div>
 @endsection

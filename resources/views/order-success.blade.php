@@ -5,208 +5,217 @@
 @php use SimpleSoftwareIO\QrCode\Facades\QrCode; @endphp
 
 @section('content')
-<div class="container" style="padding-top:140px;padding-bottom:80px;max-width:700px;">
-  <div class="glass" style="padding:32px;border-radius:16px;text-align:center;">
-    <div class="confirm-icon"><i class="fa-solid fa-check"></i></div>
-    <h2 style="margin-bottom:8px;">Pesanan Berhasil Dibuat!</h2>
-    <p style="color:var(--text-muted);margin-bottom:24px;">Silakan lakukan pembayaran sesuai nominal di bawah.</p>
+  <div class="max-w-2xl mx-auto px-6 pt-32 pb-20 min-h-screen">
 
-    <div class="order-id-box">
-      <div class="label">Nomor Pesanan</div>
-      <div class="value">{{ $order->order_code }}</div>
-    </div>
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 md:p-10 shadow-xl shadow-indigo-500/5 text-center">
 
-    <div class="summary-box" style="text-align:left;">
-      <div class="summary-row"><span>Total Pesanan</span><span>Rp {{ number_format($order->total,0,',','.') }}</span></div>
-      <div class="summary-row"><span>Metode</span><span>{{ $order->payment_type === 'dp' ? 'DP (Sebagian)' : 'Lunas (Penuh)' }}</span></div>
-      <div class="summary-row total"><span>Bayar Sekarang</span><span>Rp {{ number_format($order->amount_paid,0,',','.') }}</span></div>
-      @if($order->remaining > 0)
-        <div class="summary-row"><span>Sisa Setelah Selesai</span><span>Rp {{ number_format($order->remaining,0,',','.') }}</span></div>
+      <div class="w-20 h-20 mx-auto rounded-full bg-emerald-50 dark:bg-emerald-950/30 flex items-center justify-center text-emerald-500 mb-6">
+        <i class="fa-solid fa-check text-3xl"></i>
+      </div>
+
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">Pesanan Berhasil Dibuat!</h2>
+      <p class="text-slate-500 dark:text-slate-400 mb-8">Silakan lakukan pembayaran sesuai nominal di bawah ini.</p>
+
+      <div class="bg-indigo-50 dark:bg-indigo-950/20 border border-indigo-100 dark:border-indigo-900/30 rounded-2xl p-6 mb-6">
+        <div class="text-sm font-semibold text-indigo-600 dark:text-indigo-400 mb-1">Nomor Pesanan</div>
+        <div class="text-2xl font-black text-slate-900 dark:text-white tracking-widest">{{ $order->order_code }}</div>
+      </div>
+
+      <div class="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 text-left mb-8">
+        <div class="space-y-3 text-sm">
+          <div class="flex justify-between text-slate-600 dark:text-slate-400">
+            <span>Total Pesanan</span>
+            <span class="font-medium text-slate-900 dark:text-white">Rp {{ number_format($order->total, 0, ',', '.') }}</span>
+          </div>
+          <div class="flex justify-between text-slate-600 dark:text-slate-400">
+            <span>Metode</span>
+            <span class="font-medium text-slate-900 dark:text-white">{{ $order->payment_type === 'dp' ? 'DP (Sebagian)' : 'Lunas (Penuh)' }}</span>
+          </div>
+          <div class="pt-3 border-t border-slate-200 dark:border-slate-800 flex justify-between items-center">
+            <span class="font-bold text-slate-900 dark:text-white">Bayar Sekarang</span>
+            <span class="font-bold text-lg text-indigo-600 dark:text-indigo-400">Rp {{ number_format($order->amount_paid, 0, ',', '.') }}</span>
+          </div>
+          @if($order->remaining > 0)
+            <div class="flex justify-between text-amber-600 dark:text-amber-400 pt-2">
+              <span>Sisa Setelah Selesai</span>
+              <span class="font-medium">Rp {{ number_format($order->remaining, 0, ',', '.') }}</span>
+            </div>
+          @endif
+        </div>
+      </div>
+
+      @if($order->payment_proof)
+        <div class="text-left p-6 rounded-2xl bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-900/30 mb-8">
+          <div class="flex items-center gap-3 mb-3">
+            <i class="fa-solid fa-circle-check text-emerald-500 text-xl"></i>
+            <b class="text-emerald-600 dark:text-emerald-400">Bukti Pembayaran Terkirim</b>
+          </div>
+          <div class="text-sm text-slate-600 dark:text-slate-400 space-y-1.5">
+            <div>Metode: <b class="text-slate-900 dark:text-white">{{ strtoupper($order->payment_method) }}</b></div>
+            <div>Dikirim: {{ $order->payment_uploaded_at->format('d M Y, H:i') }}</div>
+            <div>Status: <span class="text-amber-500 font-semibold">{{ $order->status }}</span></div>
+          </div>
+          
+          <a href="{{ asset('storage/' . $order->payment_proof) }}" target="_blank" class="block mt-4 max-w-[200px]">
+            <img src="{{ asset('storage/' . $order->payment_proof) }}" alt="Bukti" class="w-full h-48 object-cover object-top rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm hover:opacity-80 transition-opacity cursor-pointer">
+          </a>
+        </div>
       @endif
+
+      @if(!$order->payment_proof)
+        <div class="text-left mb-8">
+          <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Pilih Metode Pembayaran</h3>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+            <label class="pay-method-card flex items-center justify-between gap-3 p-4 rounded-xl border border-slate-200 dark:border-slate-700 cursor-pointer hover:border-indigo-300 dark:hover:border-indigo-700 transition-colors" data-method="qris">
+              <input type="radio" name="pm" value="qris" class="hidden">
+              <div>
+                <div class="font-bold text-slate-900 dark:text-white text-sm">QRIS</div>
+                <div class="text-xs text-slate-500 dark:text-slate-400">Scan kode QR</div>
+              </div>
+              <i class="fa-solid fa-qrcode text-indigo-500 text-2xl"></i>
+            </label>
+
+            <label class="pay-method-card flex items-center justify-between gap-3 p-4 rounded-xl border border-slate-200 dark:border-slate-700 cursor-pointer hover:border-indigo-300 dark:hover:border-indigo-700 transition-colors" data-method="dana">
+              <input type="radio" name="pm" value="dana" class="hidden">
+              <div>
+                <div class="font-bold text-slate-900 dark:text-white text-sm">DANA</div>
+                <div class="text-xs text-slate-500 dark:text-slate-400">E-wallet</div>
+              </div>
+              <i class="fa-solid fa-wallet text-blue-500 text-2xl"></i>
+            </label>
+
+            <label class="pay-method-card flex items-center justify-between gap-3 p-4 rounded-xl border border-slate-200 dark:border-slate-700 cursor-pointer hover:border-indigo-300 dark:hover:border-indigo-700 transition-colors" data-method="gopay">
+              <input type="radio" name="pm" value="gopay" class="hidden">
+              <div>
+                <div class="font-bold text-slate-900 dark:text-white text-sm">GoPay</div>
+                <div class="text-xs text-slate-500 dark:text-slate-400">E-wallet</div>
+              </div>
+              <i class="fa-solid fa-wallet text-cyan-500 text-2xl"></i>
+            </label>
+
+            <label class="pay-method-card flex items-center justify-between gap-3 p-4 rounded-xl border border-slate-200 dark:border-slate-700 cursor-pointer hover:border-indigo-300 dark:hover:border-indigo-700 transition-colors" data-method="ovo">
+              <input type="radio" name="pm" value="ovo" class="hidden">
+              <div>
+                <div class="font-bold text-slate-900 dark:text-white text-sm">OVO</div>
+                <div class="text-xs text-slate-500 dark:text-slate-400">E-wallet</div>
+              </div>
+              <i class="fa-solid fa-wallet text-purple-600 text-2xl"></i>
+            </label>
+
+            <label class="pay-method-card flex items-center justify-between gap-3 p-4 rounded-xl border border-slate-200 dark:border-slate-700 cursor-pointer hover:border-indigo-300 dark:hover:border-indigo-700 transition-colors" data-method="bca">
+              <input type="radio" name="pm" value="bca" class="hidden">
+              <div>
+                <div class="font-bold text-slate-900 dark:text-white text-sm">Transfer BCA</div>
+                <div class="text-xs text-slate-500 dark:text-slate-400">Bank transfer</div>
+              </div>
+              <i class="fa-solid fa-building-columns text-blue-800 text-2xl"></i>
+            </label>
+
+            <label class="pay-method-card flex items-center justify-between gap-3 p-4 rounded-xl border border-slate-200 dark:border-slate-700 cursor-pointer hover:border-indigo-300 dark:hover:border-indigo-700 transition-colors" data-method="mandiri">
+              <input type="radio" name="pm" value="mandiri" class="hidden">
+              <div>
+                <div class="font-bold text-slate-900 dark:text-white text-sm">Transfer Mandiri</div>
+                <div class="text-xs text-slate-500 dark:text-slate-400">Bank transfer</div>
+              </div>
+              <i class="fa-solid fa-building-columns text-yellow-500 text-2xl"></i>
+            </label>
+          </div>
+
+          <div id="qrisBox" class="hidden mt-6 p-6 bg-white border border-slate-200 rounded-2xl text-center shadow-sm">
+            <div class="text-slate-900 font-bold mb-4 text-sm">Scan QRIS untuk Bayar</div>
+            <div class="inline-block bg-white p-2 rounded-xl border border-slate-100">
+              {!! QrCode::size(240)->margin(1)->generate($qrData) !!}
+            </div>
+            <div class="text-slate-900 text-sm mt-4 font-medium">
+              Nominal: <b class="text-black">Rp {{ number_format($order->amount_paid, 0, ',', '.') }}</b>
+            </div>
+            <div class="text-slate-500 text-xs mt-2">Scan dengan aplikasi bank atau e-wallet apapun</div>
+          </div>
+
+          <div id="paymentDetail" class="hidden mt-6 p-5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-dashed border-slate-300 dark:border-slate-700 text-sm text-slate-700 dark:text-slate-300"></div>
+
+          <form method="POST" action="{{ route('order.upload', $order->order_code) }}" enctype="multipart/form-data" class="mt-8 space-y-4">
+            @csrf
+            <input type="hidden" name="payment_method" id="methodInput" value="qris">
+
+            <div>
+              <label for="payment_proof" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Upload Bukti Pembayaran (Screenshot)</label>
+              <input type="file" name="payment_proof" id="payment_proof" accept="image/*" required class="w-full text-sm text-slate-500 file:mr-4 file:py-3 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 dark:file:bg-indigo-950/50 dark:file:text-indigo-400 transition-all border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-900 cursor-pointer">
+              <div class="text-xs text-slate-500 mt-2">Format: JPG, PNG, WEBP. Maks 5MB.</div>
+            </div>
+
+            @error('payment_proof')
+              <div class="text-red-500 text-sm">{{ $message }}</div>
+            @enderror
+
+            <button type="submit" class="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold transition-colors shadow-lg shadow-indigo-500/30">
+              <i class="fa-solid fa-cloud-arrow-up"></i> Kirim Bukti Pembayaran
+            </button>
+          </form>
+        </div>
+      @endif
+
+      <div class="space-y-3 mt-8">
+        <a href="https://wa.me/6281234567890?text={{ urlencode('Konfirmasi pesanan ' . $order->order_code) }}" target="_blank" class="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold transition-colors">
+          <i class="fa-brands fa-whatsapp text-lg"></i> Tanya Admin via WhatsApp
+        </a>
+
+        <a href="{{ route('home') }}" class="w-full flex items-center justify-center py-3.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+          Kembali ke Beranda
+        </a>
+      </div>
+
     </div>
-
-    {{-- ========== STATUS PEMBAYARAN (sudah upload) ========== --}}
-    @if($order->payment_proof)
-      <div style="text-align:left;padding:16px;border-radius:12px;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);margin-bottom:20px;">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-          <i class="fa-solid fa-circle-check" style="color:var(--green);font-size:1.2rem;"></i>
-          <b style="color:var(--green);">Bukti Pembayaran Terkirim</b>
-        </div>
-        <div style="font-size:.85rem;color:var(--text-muted);">
-          Metode: <b style="color:var(--text-main);">{{ strtoupper($order->payment_method) }}</b><br>
-          Dikirim: {{ $order->payment_uploaded_at->format('d M Y, H:i') }}<br>
-          Status: <span style="color:var(--amber);">{{ $order->status }}</span>
-        </div>
-        <img src="{{ asset('storage/' . $order->payment_proof) }}" alt="Bukti" style="width:100%;max-width:200px;margin-top:12px;border-radius:10px;">
-      </div>
-    @endif
-
-    {{-- ========== METODE PEMBAYARAN (belum upload) ========== --}}
-    @if(!$order->payment_proof)
-      <div style="text-align:left;margin-bottom:20px;">
-        <h3 style="font-size:1rem;margin-bottom:14px;">Pilih Metode Pembayaran</h3>
-
-        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;">
-          {{-- QRIS --}}
-          <label class="pay-method-card" data-method="qris">
-            <input type="radio" name="pm" value="qris">
-            <div>
-              <div style="font-weight:700;font-size:.9rem;">QRIS</div>
-              <div style="color:var(--text-muted);font-size:.75rem;">Scan kode QR</div>
-            </div>
-            <i class="fa-solid fa-qrcode" style="color:var(--purple-light);font-size:1.4rem;"></i>
-          </label>
-
-          {{-- DANA --}}
-          <label class="pay-method-card" data-method="dana">
-            <input type="radio" name="pm" value="dana">
-            <div>
-              <div style="font-weight:700;font-size:.9rem;">DANA</div>
-              <div style="color:var(--text-muted);font-size:.75rem;">E-wallet</div>
-            </div>
-            <i class="fa-solid fa-wallet" style="color:#118EEA;font-size:1.4rem;"></i>
-          </label>
-
-          {{-- GoPay --}}
-          <label class="pay-method-card" data-method="gopay">
-            <input type="radio" name="pm" value="gopay">
-            <div>
-              <div style="font-weight:700;font-size:.9rem;">GoPay</div>
-              <div style="color:var(--text-muted);font-size:.75rem;">E-wallet</div>
-            </div>
-            <i class="fa-solid fa-wallet" style="color:#00AED6;font-size:1.4rem;"></i>
-          </label>
-
-          {{-- OVO --}}
-          <label class="pay-method-card" data-method="ovo">
-            <input type="radio" name="pm" value="ovo">
-            <div>
-              <div style="font-weight:700;font-size:.9rem;">OVO</div>
-              <div style="color:var(--text-muted);font-size:.75rem;">E-wallet</div>
-            </div>
-            <i class="fa-solid fa-wallet" style="color:#4C3494;font-size:1.4rem;"></i>
-          </label>
-
-          {{-- BCA --}}
-          <label class="pay-method-card" data-method="bca">
-            <input type="radio" name="pm" value="bca">
-            <div>
-              <div style="font-weight:700;font-size:.9rem;">Transfer BCA</div>
-              <div style="color:var(--text-muted);font-size:.75rem;">Bank transfer</div>
-            </div>
-            <i class="fa-solid fa-building-columns" style="color:#0057B8;font-size:1.4rem;"></i>
-          </label>
-
-          {{-- Mandiri --}}
-          <label class="pay-method-card" data-method="mandiri">
-            <input type="radio" name="pm" value="mandiri">
-            <div>
-              <div style="font-weight:700;font-size:.9rem;">Transfer Mandiri</div>
-              <div style="color:var(--text-muted);font-size:.75rem;">Bank transfer</div>
-            </div>
-            <i class="fa-solid fa-building-columns" style="color:#F9A01B;font-size:1.4rem;"></i>
-          </label>
-        </div>
-
-        {{-- ========== QRIS BOX (muncul kalau pilih QRIS) ========== --}}
-        <div id="qrisBox" style="display:none;margin-top:20px;padding:24px;background:#fff;border-radius:12px;text-align:center;">
-          <div style="color:#000;font-weight:700;margin-bottom:14px;font-size:.95rem;">Scan QRIS untuk Bayar</div>
-          <div style="display:inline-block;background:#fff;padding:8px;">
-            {!! QrCode::size(240)->margin(1)->generate($qrData) !!}
-          </div>
-          <div style="color:#000;font-size:.9rem;margin-top:14px;">
-            Nominal: <b style="color:#0a0a1a;">Rp {{ number_format($order->amount_paid,0,',','.') }}</b>
-          </div>
-          <div style="color:#666;font-size:.75rem;margin-top:6px;">
-            Scan dengan aplikasi bank atau e-wallet apapun
-          </div>
-        </div>
-
-        {{-- ========== DETAIL METODE NON-QRIS ========== --}}
-        <div id="paymentDetail" style="margin-top:20px;padding:16px;border-radius:12px;background:rgba(255,255,255,.04);border:1px dashed var(--glass-border);display:none;">
-          <!-- Diisi oleh JS -->
-        </div>
-
-        {{-- ========== FORM UPLOAD BUKTI ========== --}}
-        <form method="POST" action="{{ route('order.upload', $order->order_code) }}" enctype="multipart/form-data" style="margin-top:24px;">
-          @csrf
-          <input type="hidden" name="payment_method" id="methodInput" value="qris">
-
-          <div class="form-group" style="text-align:left;">
-            <label for="payment_proof">Upload Bukti Pembayaran (Screenshot)</label>
-            <input type="file" name="payment_proof" id="payment_proof" accept="image/*" required
-                   style="padding:10px;background:rgba(255,255,255,.05);border:1px solid var(--glass-border);border-radius:10px;color:var(--text-main);width:100%;">
-            <div style="font-size:.75rem;color:var(--text-muted);margin-top:6px;">
-              Format: JPG, PNG, WEBP. Maks 5MB.
-            </div>
-          </div>
-
-          @error('payment_proof')
-            <div class="form-error" style="display:block;text-align:left;">{{ $message }}</div>
-          @enderror
-
-          <button type="submit" class="btn btn-primary btn-block" style="margin-top:12px;">
-            <i class="fa-solid fa-cloud-arrow-up"></i> Kirim Bukti Pembayaran
-          </button>
-        </form>
-      </div>
-    @endif
-
-    <a href="https://wa.me/6281234567890?text={{ urlencode('Konfirmasi pesanan ' . $order->order_code) }}" target="_blank" class="btn btn-wa btn-block" style="margin-top:12px;">
-      <i class="fa-brands fa-whatsapp"></i> Tanya Admin via WhatsApp
-    </a>
-
-    <a href="{{ route('home') }}" class="btn btn-outline btn-block" style="margin-top:12px;">
-      Kembali ke Beranda
-    </a>
   </div>
-</div>
 
-<style>
-.pay-method-card{
-  display:flex;align-items:center;justify-content:space-between;gap:12px;
-  padding:14px 16px;border-radius:12px;border:1.5px solid var(--glass-border);
-  cursor:pointer;background:rgba(255,255,255,.03);
-  transition:border-color .3s,background .3s;
-}
-.pay-method-card input{ display:none; }
-.pay-method-card:has(input:checked){
-  border-color:var(--purple-light);
-  background:rgba(139,92,246,.12);
-}
-</style>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const cards = document.querySelectorAll('.pay-method-card');
+      const detail = document.getElementById('paymentDetail');
+      const qrisBox = document.getElementById('qrisBox');
+      const methodInput = document.getElementById('methodInput');
 
-<script>
-document.querySelectorAll('.pay-method-card').forEach(card => {
-  card.addEventListener('click', () => {
-    const method = card.dataset.method;
-    document.getElementById('methodInput').value = method;
+      const details = {
+        dana: '<div class="font-bold text-slate-900 dark:text-white mb-1">DANA</div><div>Kirim ke nomor <b>081234567890</b> a.n. KREYASA DIGITAL.</div>',
+        gopay: '<div class="font-bold text-slate-900 dark:text-white mb-1">GoPay</div><div>Kirim ke nomor <b>081234567890</b> a.n. KREYASA DIGITAL.</div>',
+        ovo: '<div class="font-bold text-slate-900 dark:text-white mb-1">OVO</div><div>Kirim ke nomor <b>081234567890</b> a.n. KREYASA DIGITAL.</div>',
+        bca: '<div class="font-bold text-slate-900 dark:text-white mb-1">Bank BCA</div><div>No. Rek <b>1234567890</b><br>a.n. KREYASA DIGITAL</div>',
+        mandiri: '<div class="font-bold text-slate-900 dark:text-white mb-1">Bank Mandiri</div><div>No. Rek <b>1234567890</b><br>a.n. KREYASA DIGITAL</div>',
+      };
 
-    const detail = document.getElementById('paymentDetail');
-    const qrisBox = document.getElementById('qrisBox');
+      function selectMethod(method) {
+        methodInput.value = method;
 
-    // Sembunyikan dua-duanya dulu
-    detail.style.display = 'none';
-    qrisBox.style.display = 'none';
+        cards.forEach(c => {
+          c.classList.remove('border-indigo-500', 'bg-indigo-50', 'dark:bg-indigo-950/20');
+          c.classList.add('border-slate-200', 'dark:border-slate-700');
+        });
 
-    const details = {
-      dana:    '<b>DANA</b><br>Kirim ke nomor <b>081234567890</b> a.n. KREYASA DIGITAL.',
-      gopay:   '<b>GoPay</b><br>Kirim ke nomor <b>081234567890</b> a.n. KREYASA DIGITAL.',
-      ovo:     '<b>OVO</b><br>Kirim ke nomor <b>081234567890</b> a.n. KREYASA DIGITAL.',
-      bca:     '<b>Bank BCA</b><br>No. Rek <b>1234567890</b><br>a.n. KREYASA DIGITAL',
-      mandiri: '<b>Bank Mandiri</b><br>No. Rek <b>1234567890</b><br>a.n. KREYASA DIGITAL',
-    };
+        const activeCard = document.querySelector(`.pay-method-card[data-method="${method}"]`);
+        if (activeCard) {
+          activeCard.classList.remove('border-slate-200', 'dark:border-slate-700');
+          activeCard.classList.add('border-indigo-500', 'bg-indigo-50', 'dark:bg-indigo-950/20');
+        }
 
-    if (method === 'qris') {
-      qrisBox.style.display = 'block';
-    } else {
-      detail.innerHTML = details[method] || '';
-      detail.style.display = 'block';
-    }
-  });
-});
+        if (method === 'qris') {
+          qrisBox.classList.remove('hidden');
+          detail.classList.add('hidden');
+        } else {
+          qrisBox.classList.add('hidden');
+          detail.innerHTML = details[method] || '';
+          detail.classList.remove('hidden');
+        }
+      }
 
-// Default: QRIS terpilih saat halaman dibuka
-document.querySelector('.pay-method-card[data-method="qris"]').click();
-</script>
+      cards.forEach(card => {
+        card.addEventListener('click', function (e) {
+          e.preventDefault();
+          selectMethod(this.dataset.method);
+        });
+      });
+
+      selectMethod('qris');
+    });
+  </script>
 @endsection
