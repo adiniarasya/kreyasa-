@@ -57,12 +57,6 @@
         </button>
       </form>
 
-      <div
-        class="mt-8 p-4 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/30 flex items-start gap-3 text-xs text-amber-700 dark:text-amber-400">
-        <i class="fa-solid fa-circle-info mt-0.5"></i>
-        <span>Demo: email <b>admin@kreyasa.id</b> / password <b>kreyasa123</b></span>
-      </div>
-
     </div>
   </div>
 @endsection

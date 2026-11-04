@@ -25,14 +25,18 @@ class ProductController extends Controller
             'dp_percent'  => 'required|integer|min:10|max:100',
             'badge'       => 'nullable|string|max:50',
             'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+            'file_path'   => 'required|file|mimes:pdf,zip,rar|max:20480', // Max 20MB
         ]);
 
-        // Upload gambar kalau ada
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('products', 'public');
         } else {
-            // Placeholder default
             $validated['image'] = 'https://via.placeholder.com/400x300/0F0F2D/8B5CF6?text=' . urlencode($validated['name']);
+        }
+
+        // Upload File Produk Digital
+        if ($request->hasFile('file_path')) {
+            $validated['file_path'] = $request->file('file_path')->store('product_files', 'public');
         }
 
         $validated['is_active'] = true;
@@ -52,17 +56,23 @@ class ProductController extends Controller
             'dp_percent'  => 'required|integer|min:10|max:100',
             'badge'       => 'nullable|string|max:50',
             'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+            'file_path'   => 'nullable|file|mimes:pdf,zip,rar|max:20480',
         ]);
 
-        // Upload gambar baru kalau ada
         if ($request->hasFile('image')) {
-            // Hapus gambar lama (kalau file lokal, bukan URL)
             if ($product->image && !str_starts_with($product->image, 'http')) {
                 Storage::disk('public')->delete($product->image);
             }
             $validated['image'] = $request->file('image')->store('products', 'public');
         }
-        // Kalau tidak upload baru, image tetap seperti sebelumnya
+
+        // Upload File Produk Baru kalau ada
+        if ($request->hasFile('file_path')) {
+            if ($product->file_path) {
+                Storage::disk('public')->delete($product->file_path);
+            }
+            $validated['file_path'] = $request->file('file_path')->store('product_files', 'public');
+        }
 
         $product->update($validated);
 
@@ -71,9 +81,12 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
-        // Hapus gambar lokal
         if ($product->image && !str_starts_with($product->image, 'http')) {
             Storage::disk('public')->delete($product->image);
+        }
+        
+        if ($product->file_path) {
+            Storage::disk('public')->delete($product->file_path);
         }
 
         $name = $product->name;

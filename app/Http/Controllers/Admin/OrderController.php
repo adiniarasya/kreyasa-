@@ -27,6 +27,11 @@ class OrderController extends Controller
             $order->remaining = 0;
         }
 
+        if ($request->status === 'Dibatalkan') {
+            $order->amount_paid = 0;
+            $order->remaining = 0;
+        }
+
         $order->save();
 
         return back()->with('success', "Status pesanan {$order->order_code} diperbarui menjadi \"{$order->status}\"");

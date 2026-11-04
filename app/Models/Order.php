@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -7,27 +6,38 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     protected $fillable = [
-    'order_code',
-    'customer_name',
-    'customer_wa',
-    'note',
-    'total',
-    'payment_type',
-    'payment_method',           
-    'payment_proof',            
-    'payment_uploaded_at',      
-    'amount_paid',
-    'remaining',
-    'status',
-];
+        'user_id',
+        'order_code',
+        'customer_name',
+        'customer_wa',
+        'note',
+        'total',
+        'payment_type',
+        'payment_method',
+        'payment_proof',
+        'payment_uploaded_at',
+        'amount_paid',
+        'remaining',
+        'status',
+    ];
 
-protected $casts = [
-    'payment_uploaded_at' => 'datetime',
-];
+    protected $casts = [
+        'payment_uploaded_at' => 'datetime',
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function items()
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
     }
 
     public static function generateCode(): string

@@ -68,7 +68,7 @@
           </li>
           <li class="flex items-start gap-3">
             <i class="fa-solid fa-location-dot mt-1 text-indigo-500"></i>
-            <span>Bandung, Jawa Barat, Indonesia</span>
+            <span>Depok, Jawa Barat, Indonesia</span>
           </li>
         </ul>
         <a href="https://wa.me/6281234567890" target="_blank"

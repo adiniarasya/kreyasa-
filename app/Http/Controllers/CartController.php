@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Product;
@@ -9,12 +8,12 @@ class CartController extends Controller
 {
     public function index()
     {
-        $cart = session()->get('cart', []);
-        $total = 0;
+        $cart     = session()->get('cart', []);
+        $total    = 0;
         $dpAmount = 0;
 
         foreach ($cart as $item) {
-            $total += $item['price'] * $item['qty'];
+            $total    += $item['price'] * $item['qty'];
             $dpAmount += ($item['price'] * $item['dp_percent'] / 100) * $item['qty'];
         }
 
