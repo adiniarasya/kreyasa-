@@ -23,4 +23,8 @@ class DashboardController extends Controller
             'recentOrders'
         ));
     }
+    public function guides()
+{
+    return view('admin.guides');
+}       
 }

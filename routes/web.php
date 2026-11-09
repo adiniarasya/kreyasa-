@@ -52,4 +52,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/products/{product}', [AdminProductController::class, 'update'])->name('products.update');
         Route::post('/products/{product}/delete', [AdminProductController::class, 'destroy'])->name('products.destroy');
     });
+    // Guides
+Route::get('/guides', [DashboardController::class, 'guides'])->name('guides');
 });

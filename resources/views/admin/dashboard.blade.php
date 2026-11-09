@@ -27,12 +27,10 @@
           <i class="fa-solid fa-box w-5 text-center"></i>
           <span>Kelola Produk</span>
         </a>
-        <a href="#"
-          class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium text-sm transition-colors">
-          <i class="fa-solid fa-book w-5 text-center"></i>
-          <span>Buku Panduan</span>
-        </a>
-      </nav>
+<a href="{{ route('admin.guides') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium text-sm transition-colors">
+  <i class="fa-solid fa-book w-5 text-center"></i>
+  <span>Buku Panduan</span>
+</a>
 
       <form method="POST" action="{{ route('admin.logout') }}" class="mt-6">
         @csrf
