@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
@@ -23,8 +22,18 @@ class DashboardController extends Controller
             'recentOrders'
         ));
     }
+
     public function guides()
-{
-    return view('admin.guides');
-}       
+    {
+        return view('admin.guides');
+    }
+    
+    public function downloadGuide(string $file)
+    {
+        $path = storage_path('app/guides/' . $file);
+
+        abort_unless(file_exists($path), 404, 'File panduan tidak ditemukan.');
+
+        return response()->download($path);
+    }
 }

@@ -1,12 +1,12 @@
 <?php
 
-use App\Http\Controllers\CartController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
 /* ================= PUBLIC ================= */
@@ -51,7 +51,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/products', [AdminProductController::class, 'store'])->name('products.store');
         Route::post('/products/{product}', [AdminProductController::class, 'update'])->name('products.update');
         Route::post('/products/{product}/delete', [AdminProductController::class, 'destroy'])->name('products.destroy');
+
+        // Guides
+        Route::get('/guides', [DashboardController::class, 'guides'])->name('guides');
+        Route::get('/guides/download/{file}', [DashboardController::class, 'downloadGuide'])->name('guides.download');
     });
-    // Guides
-Route::get('/guides', [DashboardController::class, 'guides'])->name('guides');
 });
